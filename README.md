@@ -1,6 +1,8 @@
 puppet-bootstrap
 ================
 
+I will be re-writing this shortly to reflect my changes.
+
 This bash program will bootstrap any supported OS with Puppet.  It installs the minimum required software and connects to your puppet master.  You can optionally specify an environment to use and optionally specify a custom script to execute before the puppet agent is started.
 
 ## Supported Operating Systems
