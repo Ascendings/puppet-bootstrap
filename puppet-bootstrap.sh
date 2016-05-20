@@ -19,6 +19,7 @@ ENVIRONMENT="" # You can specify an environment to use; leaving this blank will 
 EXEC_PATH="/opt/puppetlabs/bin/puppet" # Path the puppet executable
 PKG_NAME="" # Name of the puppet package to install
 REPO="0" # Setting this to 1 will install puppet from OS's package repo
+SERVER="" # Puppet master server
 WAITFORCERT="30" # Tells puppet to wait n number of seconds for the server certficate signing
 
 # Get the options passed to the script
@@ -51,6 +52,10 @@ while getopts ":a:b:c:de:p:rx:w:" opt; do
     r)
       # Use the puppet package found in the system's repos
       REPO="1"
+      ;;
+    s)
+      # Set the puppet server
+      SERVER="$OPTARG"
       ;;
     x)
       # Set the pupept executable path
@@ -166,13 +171,13 @@ if [ "$DISABLE" == "1" ]; then
 fi
 
 # Build our puppet command
-PUPPET_CMD="$EXEC_PATH agent -t "
+PUPPET_CMD="$EXEC_PATH agent -t"
 if [ "$WAITFORCERT" != "0" ]; then
   PUPPET_CMD="$PUPPET_CMD -w $WAITFORCERT "
 fi
 
 # Run the puppet agent
-"$PUPPET_CMD"
+$PUPPET_CMD
 
 # Run any custom script after starting puppet
 if [ -f "$AFTER_SCRIPT" ] && [ "$AFTER_SCRIPT" != "" ]; then
