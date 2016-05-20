@@ -23,7 +23,7 @@ SERVER="" # Puppet master server
 WAITFORCERT="30" # Tells puppet to wait n number of seconds for the server certficate signing
 
 # Get the options passed to the script
-while getopts ":a:b:c:de:p:rx:w:" opt; do
+while getopts ":a:b:c:de:p:rs:x:w:" opt; do
   case $opt in
     a)
       # Set the after script
