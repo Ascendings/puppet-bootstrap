@@ -18,8 +18,8 @@ DISABLE="0" # If set to 1, this will stop and disable the puppet service
 ENVIRONMENT="" # You can specify an environment to use; leaving this blank will use the default
 EXEC_PATH="/opt/puppetlabs/bin/puppet" # Path the puppet executable
 PKG_NAME="" # Name of the puppet package to install
+PUPPET_SERVER="" # Puppet master server
 REPO="0" # Setting this to 1 will install puppet from OS's package repo
-SERVER="" # Puppet master server
 WAITFORCERT="30" # Tells puppet to wait n number of seconds for the server certficate signing
 
 # Get the options passed to the script
@@ -55,7 +55,7 @@ while getopts ":a:b:c:de:p:rs:x:w:" opt; do
       ;;
     s)
       # Set the puppet server
-      SERVER="$OPTARG"
+      PUPPET_SERVER="$OPTARG"
       ;;
     x)
       # Set the pupept executable path
