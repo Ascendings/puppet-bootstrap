@@ -14,6 +14,7 @@
 AFTER_SCRIPT="" # Script to run immediately following the first puppet run
 BEFORE_SCRIPT="" # Script to run before the first puppet run
 CONF_PATH="/etc/puppetlabs/puppet/puppet.conf" # The puppet agent config file
+DISABLE="0" # If set to 1, this will stop and disable the puppet service
 ENVIRONMENT="" # You can specify an environment to use; leaving this blank will use the default
 EXEC_PATH="/opt/puppetlabs/bin/puppet" # Path the puppet executable
 PKG_NAME="" # Name of the puppet package to install
@@ -21,7 +22,7 @@ REPO="0" # Setting this to 1 will install puppet from OS's package repo
 WAITFORCERT="30" # Tells puppet to wait n number of seconds for the server certficate signing
 
 # Get the options passed to the script
-while getopts ":a:b:c:e:p:rx:w:" opt; do
+while getopts ":a:b:c:de:p:rx:w:" opt; do
   case $opt in
     a)
       # Set the after script
@@ -34,6 +35,10 @@ while getopts ":a:b:c:e:p:rx:w:" opt; do
     c)
       # Set the puppet config path
       CONF_PATH="$OPTARG"
+      ;;
+    d)
+      # Disable puppet service
+      DISABLE="1"
       ;;
     e)
       # Set the puppet environment
@@ -147,12 +152,18 @@ if [ "$ENVIRONMENT" != "" ]; then
 fi
 
 # Run any custom init script before starting puppet
-if [ -f "$BEFORE_SCRIPT" && "$BEFORE_SCRIPT" != "" ]; then
+if [ -f "$BEFORE_SCRIPT" ] && [ "$BEFORE_SCRIPT" != "" ]; then
   . "$BEFORE_SCRIPT"
 fi
 
 # Enable the puppet agent
 "$EXEC_PATH" agent --enable
+
+# Disable puppet service
+if [ "$DISABLE" == "1" ]; then
+  systemctl stop puppet
+  systemctl disable puppet
+fi
 
 # Build our puppet command
 PUPPET_CMD="$EXEC_PATH agent -t "
@@ -164,7 +175,7 @@ fi
 "$PUPPET_CMD"
 
 # Run any custom script after starting puppet
-if [ -f "$AFTER_SCRIPT" && "$AFTER_SCRIPT" != "" ]; then
+if [ -f "$AFTER_SCRIPT" ] && [ "$AFTER_SCRIPT" != "" ]; then
   . "$AFTER_SCRIPT"
 fi
 
