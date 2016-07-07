@@ -126,7 +126,12 @@ if [ "$REPO" != "1" ]; then
       yum install -y puppet-agent
   elif [ -f /etc/redhat-release ]; then
       OS=rhel
+      # Check if it's Red Hat < 7
       VER=$(awk '/release/ {split($3,a,"."); print a[1];}' /etc/redhat-release)
+      # If it's Red Hat 7 (or possibly newer) then it will be "release" because redhat-release changed slightly
+      if [ "$VER" == 'release' ]; then
+        VER=$(awk '/release/ {split($4,a,"."); print a[1];}' /etc/redhat-release)
+      fi
 
       # RHEL CentOS update & puppet install
       wget https://yum.puppetlabs.com/puppetlabs-release-pc1-el-$VER.noarch.rpm
