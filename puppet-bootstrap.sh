@@ -7,7 +7,7 @@
 # Ubuntu 16.04 (Xenial)
 # RHEL/CentOS 7.x
 # Fedora 23
-# Debian 8
+# Debian 8 (Jessie), 9 (Stretch)
 
 
 # Init variables
@@ -102,10 +102,13 @@ if [ "$REPO" != "1" ]; then
       apt-get -y install puppet-agent
   elif [ -f /etc/debian_version ]; then
       VER=$(cat /etc/debian_version | cut -d '.' -f 1)
-      if [ $VER = 8 ]; then
-        SUB="jessie"
-      elif [ $VER = 7 ]; then
+
+      if [ $VER = 7 ]; then
         SUB="wheezy"
+      elif [ $VER = 8 ]; then
+        SUB="jessie"
+      elif [ $VER = 9 ]; then
+        SUB="stretch"
       fi
 
       # Debian update & puppet install
